@@ -776,7 +776,8 @@ task itest(type: Test, dependsOn: [jar]) {
     systemProperties['jar.path'] = jar.getArchiveFile().get().getAsFile()
 }
 
-task slowtest(type: Test, dependsOn: ['jar', 'itest']) {
+//task slowtest(type: Test, dependsOn: ['jar', 'itest']) {
+task slowtest(type: Test, dependsOn: ['jar']) {
     useJUnitPlatform()
     testClassesDirs = sourceSets.slowtest.output.classesDirs
     classpath = sourceSets.slowtest.runtimeClasspath
