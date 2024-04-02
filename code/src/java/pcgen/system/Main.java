@@ -66,7 +66,13 @@ public final class Main
 {
 
 	private static PropertyContextFactory configFactory;
-	private static CommandLineArguments commandLineArguments = new CommandLineArguments(new String[0]);
+	private static CommandLineArguments commandLineArguments;
+	static {
+	    // Should be able to leave 'commandLineArguments' empty, as none
+	    // of the accessor methods are called until after 'parseCommands'.
+	    // If that were done, it could also be labeled 'final'.
+	    commandLineArguments = parseCommands(new String[0]);
+	}
 
 	private Main()
 	{
@@ -164,8 +170,13 @@ public final class Main
 	 */
 	private static CommandLineArguments parseCommands(String[] argv)
 	{
-		CommandLineArguments result = new CommandLineArguments(argv);
-
+		CommandLineArguments result;
+		try {
+		    result = new CommandLineArguments(argv);
+		} catch (ArgumentParserException e) {
+		    System.err.println("Error processing command line arguments.");
+		    System.exit(1);
+		}
 		if (result.isVerbose())
 		{
 			Logging.setCurrentLoggingLevel(Logging.DEBUG);

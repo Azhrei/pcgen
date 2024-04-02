@@ -16,22 +16,31 @@ import java.io.File;
 import java.util.Optional;
 
 class CommandLineArgumentsTest {
-    private static Runnable revertSystemExitInterceptor;
+    //private static Runnable revertSystemExitInterceptor;
 
     /**
      * We temporarily replace the security manager in order to
      * intercept calls to System.exit from the argparse4j library.
      * Otherwise, these calls would terminate the Unit Test runner.
+     * (SecurityManager is deprecated for removal.  As of Java 21,
+     * this code will produce an UnsupportedOperation exception.
+     * See https://snyk.io/blog/securitymanager-removed-java/
+     * argparse4j will throw ArgumentParserException if an illegal
+     * argument is passed _as long as_ we don't call parseArgsOrFail()
+     * and just use parseArgs().  Main::main() now uses that
+     * method and catches the exception, so we can catch the
+     * exception here as well and don't need the interceptor
+     * any more.
      */
-    @BeforeAll
-    static void initialize() {
-        revertSystemExitInterceptor = SystemExitInterceptor.startInterceptor();
-    }
+    //@BeforeAll
+    //static void initialize() {
+    //    revertSystemExitInterceptor = SystemExitInterceptor.startInterceptor();
+    //}
 
-    @AfterAll
-    static void cleanup() {
-        revertSystemExitInterceptor.run();
-    }
+    //@AfterAll
+    //static void cleanup() {
+    //    revertSystemExitInterceptor.run();
+    //}
 
     private CommandLineArguments from(String[] args) {
         return new CommandLineArguments(args);
@@ -91,8 +100,7 @@ class CommandLineArgumentsTest {
         @ValueSource(strings = {"-c,file/that/doesn't/exist", "-c,", "-c", "-c,characters/Sorcerer.pcg,characters/Everything.pcg",
                 "--character,file/that/doesn't/exist", "--character,", "--character", "--character,characters/Sorcerer.pcg,characters/Everything.pcg"})
         void invalidUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
-            Assertions.assertThrows(SystemExitInterceptor.SystemExitCalledException.class,
-                    () -> from(args));
+            Assertions.assertThrows(ArgumentParserException.class, () -> from(args));
         }
     }
 
@@ -138,8 +146,7 @@ class CommandLineArgumentsTest {
         @ValueSource(strings = {"-s,folder/that/doesn't/exist", "-s,", "-s", "-s,characters,data", "-s,characters/Sorcerer.pcg",
                 "--settingsdir,folder/that/doesn't/exist", "--settingsdir,", "--settingsdir", "--settingsdir,characters,data"})
         void invalidUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
-            Assertions.assertThrows(SystemExitInterceptor.SystemExitCalledException.class,
-                    () -> from(args));
+            Assertions.assertThrows(ArgumentParserException.class, () -> from(args));
         }
     }
 
@@ -168,8 +175,7 @@ class CommandLineArgumentsTest {
         @ValueSource(strings = {"-S,", "-S", "-S,too,many",
                 "--configfilename,", "--configfilename", "--configfilename,too,many"})
         void invalidUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
-            Assertions.assertThrows(SystemExitInterceptor.SystemExitCalledException.class,
-                    () -> from(args));
+            Assertions.assertThrows(ArgumentParserException.class, () -> from(args));
         }
     }
 
@@ -196,8 +202,7 @@ class CommandLineArgumentsTest {
         @ValueSource(strings = {"-m,", "-m", "-m,too,many",
                 "--campaignmode,", "--campaignmode", "--campaignmode,too,many"})
         void invalidUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
-            Assertions.assertThrows(SystemExitInterceptor.SystemExitCalledException.class,
-                    () -> from(args));
+            Assertions.assertThrows(ArgumentParserException.class, () -> from(args));
         }
     }
 
@@ -224,8 +229,7 @@ class CommandLineArgumentsTest {
         @ValueSource(strings = {"-D,", "-D", "-D,too,many",
                 "--tab,", "--tab", "--tab,too,many"})
         void invalidUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
-            Assertions.assertThrows(SystemExitInterceptor.SystemExitCalledException.class,
-                    () -> from(args));
+            Assertions.assertThrows(ArgumentParserException.class, () -> from(args));
         }
     }
 
@@ -253,8 +257,7 @@ class CommandLineArgumentsTest {
         @ValueSource(strings = {"-E,file/that/doesn't/exist", "-E,", "-E", "-E,characters/Sorcerer.pcg,characters/Everything.pcg",
                 "--exportsheet,file/that/doesn't/exist", "--exportsheet,", "--exportsheet", "--exportsheet,characters/Sorcerer.pcg,characters/Everything.pcg"})
         void testillegalUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
-            Assertions.assertThrows(SystemExitInterceptor.SystemExitCalledException.class,
-                    () -> from(args));
+            Assertions.assertThrows(ArgumentParserException.class, () -> from(args));
         }
     }
 
@@ -281,8 +284,7 @@ class CommandLineArgumentsTest {
         @ValueSource(strings = {"-c,file/that/doesn't/exist", "-c,", "-c", "-c,characters/Sorcerer.pcg,characters/Everything.pcg",
                 "--character,file/that/doesn't/exist", "--character,", "--character", "--character,characters/Sorcerer.pcg,characters/Everything.pcg"})
         void invalidUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
-            Assertions.assertThrows(SystemExitInterceptor.SystemExitCalledException.class,
-                    () -> from(args));
+            Assertions.assertThrows(ArgumentParserException.class, () -> from(args));
         }
     }
 
@@ -326,8 +328,7 @@ class CommandLineArgumentsTest {
         @ValueSource(strings = {"-o,", "-o", "-o,more/than,one/file",
                 "--outputfile,", "--outputfile", "--outputfile,more/than,one/file"})
         void invalidUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
-            Assertions.assertThrows(SystemExitInterceptor.SystemExitCalledException.class,
-                    () -> from(args));
+            Assertions.assertThrows(ArgumentParserException.class, () -> from(args));
         }
     }
 
