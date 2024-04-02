@@ -1,6 +1,19 @@
 #!/bin/sh
 set -e
 
+if [ ! -e ./pcgen.sh ]; then
+    # We're not in the directory where the script lives.
+    # Change to it so relative paths work.
+    if ! cd "${0%/*}"; then
+	# Can't change to the directory containing this script??
+	# Could be because invoker doesn't put full path in $0,
+	# but then how is script supposed to figure out where
+	# it was executed from?
+	echo >&2 "pcgen.sh: Not in proper directory (must be in same directory as 'pcgen.sh')"
+	exit 1
+    fi
+fi
+
 available_memory="unknown"
 default_min_memory=256
 default_max_memory=512
