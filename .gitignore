@@ -95,8 +95,7 @@ code/build.eclipse/
 # IntelliJ IDE
 .idea/
 out/
-pcgendev.iml
-pcgen.iml
+*.iml
 pcgen.ipr
 pcgen.iws
 

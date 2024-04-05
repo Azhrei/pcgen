@@ -58,6 +58,7 @@ import pcgen.util.Logging;
 import pcgen.util.PJEP;
 
 import javafx.embed.swing.JFXPanel;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
 
 /**
  * Main entry point for pcgen.
@@ -170,18 +171,17 @@ public final class Main
 	 */
 	private static CommandLineArguments parseCommands(String[] argv)
 	{
-		CommandLineArguments result;
+		CommandLineArguments result = null;
 		try {
-		    result = new CommandLineArguments(argv);
+			result = new CommandLineArguments(argv);
+			if (result.isVerbose())
+			{
+				Logging.setCurrentLoggingLevel(Logging.DEBUG);
+			}
 		} catch (ArgumentParserException e) {
-		    System.err.println("Error processing command line arguments.");
-		    System.exit(1);
+			System.err.println("Error processing command line arguments.");
+			System.exit(1);
 		}
-		if (result.isVerbose())
-		{
-			Logging.setCurrentLoggingLevel(Logging.DEBUG);
-		}
-
 		return result;
 	}
 

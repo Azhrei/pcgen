@@ -11,6 +11,8 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import org.apache.commons.lang3.Validate;
 import pcgen.cdom.base.Constants;
 
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
+
 public class CommandLineArguments
 {
 
