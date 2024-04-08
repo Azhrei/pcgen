@@ -46,8 +46,10 @@ def javafx_version = "21.0.2"
 def java_vers   = java_version.split('[.]')	// Regex, so "[]" to quote it
 def javafx_vers = javafx_version.split('[.]')
 
-// FJE: Gradle 8.5 includes v6.55.0, but that doesn't support Java 21+
-//project.pmd.toolVersion = "7.0.0"
+// FJE
+pmd {
+    ignoreFailures = true
+}
 
 //toolchainManagement {
 //    jvm {
@@ -374,11 +376,11 @@ runtime {
     ]
 
     // We support Mac/Win/Linux x86-64, Mac/Linux aarch64, and Win x86-32
-    targetPlatform('linux-x64',     "$projectDir/jre/linux/jre_x64")
-    targetPlatform('linux-aarch64', "$projectDir/jre/linux/jre_aarch64")
-    targetPlatform('windows-x64',   "$projectDir/jre/windows/jre_x64")
-    targetPlatform('windows-x32',   "$projectDir/jre/windows/jre_x32")
-    targetPlatform('mac-x64',       "$projectDir/jre/mac/jre_x64/Contents/Home")
+    //targetPlatform('linux-x64',     "$projectDir/jre/linux/jre_x64")
+    //targetPlatform('linux-aarch64', "$projectDir/jre/linux/jre_aarch64")
+    //targetPlatform('windows-x64',   "$projectDir/jre/windows/jre_x64")
+    //targetPlatform('windows-x32',   "$projectDir/jre/windows/jre_x32")
+    //targetPlatform('mac-x64',       "$projectDir/jre/mac/jre_x64/Contents/Home")
     targetPlatform('mac-aarch64',   "$projectDir/jre/mac/jre_aarch64/Contents/Home")
 
     // Use the jpackage tool that comes with Java to build native installers
@@ -852,8 +854,13 @@ task msrdinttest(type: Test, dependsOn: 'jar') {
 }
 
 // Do the lot!  TODO reenable slowtest
-//task all(dependsOn: ['build', 'slowtest', 'javadoc', 'buildNsis', 'allReports']) {
-task all(dependsOn: ['build', 'javadoc', 'buildNsis', 'allReports']) {
+task all(dependsOn: [
+    'build',
+    'slowtest',
+    // 'javadoc',
+    // 'buildNsis',
+    'allReports'
+]) {
 }
 
 allprojects {

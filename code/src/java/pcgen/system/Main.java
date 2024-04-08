@@ -172,13 +172,16 @@ public final class Main
 	private static CommandLineArguments parseCommands(String[] argv)
 	{
 		CommandLineArguments result = null;
-		try {
+		try
+		{
 			result = new CommandLineArguments(argv);
 			if (result.isVerbose())
 			{
 				Logging.setCurrentLoggingLevel(Logging.DEBUG);
 			}
-		} catch (ArgumentParserException e) {
+		}
+		catch (ArgumentParserException e)
+		{
 			System.err.println("Error processing command line arguments.");
 			System.exit(1);
 		}
