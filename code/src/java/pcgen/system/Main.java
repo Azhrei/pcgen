@@ -28,6 +28,8 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.logging.Level;
 import javax.swing.JOptionPane;
+
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import pcgen.cdom.base.Constants;
@@ -66,7 +68,7 @@ public final class Main
 {
 
 	private static PropertyContextFactory configFactory;
-	private static CommandLineArguments commandLineArguments = new CommandLineArguments(new String[0]);
+	private static CommandLineArguments commandLineArguments;
 
 	private Main()
 	{
@@ -108,9 +110,13 @@ public final class Main
 
 		logSystemProps();
 
-		commandLineArguments = parseCommands(args);
+        try {
+            commandLineArguments = parseCommands(args);
+        } catch (ArgumentParserException e) {
+            throw new RuntimeException(e);
+        }
 
-		configFactory = new PropertyContextFactory(getConfigPath());
+        configFactory = new PropertyContextFactory(getConfigPath());
 		if (commandLineArguments.getConfigFileName().isPresent())
 		{
 			configFactory.registerAndLoadPropertyContext(
@@ -162,8 +168,7 @@ public final class Main
 	 *
 	 * @param argv the command line arguments to be parsed
 	 */
-	private static CommandLineArguments parseCommands(String[] argv)
-	{
+	private static CommandLineArguments parseCommands(String[] argv) throws ArgumentParserException {
 		CommandLineArguments result = new CommandLineArguments(argv);
 
 		if (result.isVerbose())

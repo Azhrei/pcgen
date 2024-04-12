@@ -6,6 +6,7 @@ import java.util.Optional;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.MutuallyExclusiveGroup;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.apache.commons.lang3.Validate;
@@ -16,10 +17,9 @@ public class CommandLineArguments
 
     private final Namespace namespace;
 
-    public CommandLineArguments(String[] args)
-    {
+    public CommandLineArguments(String[] args) throws ArgumentParserException {
         Validate.notNull(args, "Parameter 'args' must not be null");
-        this.namespace = getParser().parseArgsOrFail(args);
+        this.namespace = getParser().parseArgs(args);
     }
 
     /**

@@ -1,5 +1,6 @@
 package pcgen.system;
 
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,7 +34,7 @@ class CommandLineArgumentsTest {
         revertSystemExitInterceptor.run();
     }
 
-    private CommandLineArguments from(String[] args) {
+    private CommandLineArguments from(String[] args) throws ArgumentParserException {
         return new CommandLineArguments(args);
     }
 
@@ -54,7 +55,7 @@ class CommandLineArgumentsTest {
 
     @ParameterizedTest
     @EmptySource
-    void noArgs(String... args) {
+    void noArgs(String... args) throws ArgumentParserException {
         CommandLineArguments classUnderTest = from(args);
         Assertions.assertEquals(Optional.empty(), classUnderTest.getCampaignMode());
         Assertions.assertEquals(Optional.empty(), classUnderTest.getCharacterFile());
@@ -72,7 +73,7 @@ class CommandLineArgumentsTest {
     class CharacterTest {
         @ParameterizedTest
         @ValueSource(strings = {"-c,characters/Sorcerer.pcg", "--character,characters/Sorcerer.pcg"})
-        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
+        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) throws ArgumentParserException {
             CommandLineArguments classUnderTest = from(args);
 
             Assertions.assertEquals(Optional.empty(), classUnderTest.getCampaignMode());
@@ -91,7 +92,7 @@ class CommandLineArgumentsTest {
         @ValueSource(strings = {"-c,file/that/doesn't/exist", "-c,", "-c", "-c,characters/Sorcerer.pcg,characters/Everything.pcg",
                 "--character,file/that/doesn't/exist", "--character,", "--character", "--character,characters/Sorcerer.pcg,characters/Everything.pcg"})
         void invalidUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
-            Assertions.assertThrows(SystemExitInterceptor.SystemExitCalledException.class,
+            Assertions.assertThrows(ArgumentParserException.class,
                     () -> from(args));
         }
     }
@@ -100,7 +101,7 @@ class CommandLineArgumentsTest {
     class VerboseTest {
         @ParameterizedTest
         @ValueSource(strings = {"-v", "-vv"})
-        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
+        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) throws ArgumentParserException {
             CommandLineArguments classUnderTest = from(args);
 
             Assertions.assertEquals(Optional.empty(), classUnderTest.getCampaignMode());
@@ -120,7 +121,7 @@ class CommandLineArgumentsTest {
     class SettingsDirTest {
         @ParameterizedTest
         @ValueSource(strings = {"-s,characters", "--settingsdir,characters"})
-        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
+        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) throws ArgumentParserException {
             CommandLineArguments classUnderTest = from(args);
 
             Assertions.assertEquals(Optional.empty(), classUnderTest.getCampaignMode());
@@ -138,7 +139,7 @@ class CommandLineArgumentsTest {
         @ValueSource(strings = {"-s,folder/that/doesn't/exist", "-s,", "-s", "-s,characters,data", "-s,characters/Sorcerer.pcg",
                 "--settingsdir,folder/that/doesn't/exist", "--settingsdir,", "--settingsdir", "--settingsdir,characters,data"})
         void invalidUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
-            Assertions.assertThrows(SystemExitInterceptor.SystemExitCalledException.class,
+            Assertions.assertThrows(ArgumentParserException.class,
                     () -> from(args));
         }
     }
@@ -148,7 +149,7 @@ class CommandLineArgumentsTest {
     class ConfigFileNameTest {
         @ParameterizedTest
         @ValueSource(strings = {"-S,testname.ini", "--configfilename,testname.ini"})
-        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
+        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) throws ArgumentParserException {
             CommandLineArguments classUnderTest = from(args);
 
             Assertions.assertEquals(Optional.empty(), classUnderTest.getCampaignMode());
@@ -168,7 +169,7 @@ class CommandLineArgumentsTest {
         @ValueSource(strings = {"-S,", "-S", "-S,too,many",
                 "--configfilename,", "--configfilename", "--configfilename,too,many"})
         void invalidUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
-            Assertions.assertThrows(SystemExitInterceptor.SystemExitCalledException.class,
+            Assertions.assertThrows(ArgumentParserException.class,
                     () -> from(args));
         }
     }
@@ -177,7 +178,7 @@ class CommandLineArgumentsTest {
     class CampaignModeTest {
         @ParameterizedTest
         @ValueSource(strings = {"-m,testCampaign", "--campaignmode,testCampaign"})
-        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
+        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) throws ArgumentParserException {
             CommandLineArguments classUnderTest = from(args);
 
             Assertions.assertEquals(Optional.of("testCampaign"), classUnderTest.getCampaignMode());
@@ -196,7 +197,7 @@ class CommandLineArgumentsTest {
         @ValueSource(strings = {"-m,", "-m", "-m,too,many",
                 "--campaignmode,", "--campaignmode", "--campaignmode,too,many"})
         void invalidUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
-            Assertions.assertThrows(SystemExitInterceptor.SystemExitCalledException.class,
+            Assertions.assertThrows(ArgumentParserException.class,
                     () -> from(args));
         }
     }
@@ -205,7 +206,7 @@ class CommandLineArgumentsTest {
     class TabTest {
         @ParameterizedTest
         @ValueSource(strings = {"-D,test", "--tab,test"})
-        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
+        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) throws ArgumentParserException {
             CommandLineArguments classUnderTest = from(args);
 
             Assertions.assertEquals(Optional.empty(), classUnderTest.getCampaignMode());
@@ -224,7 +225,7 @@ class CommandLineArgumentsTest {
         @ValueSource(strings = {"-D,", "-D", "-D,too,many",
                 "--tab,", "--tab", "--tab,too,many"})
         void invalidUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
-            Assertions.assertThrows(SystemExitInterceptor.SystemExitCalledException.class,
+            Assertions.assertThrows(ArgumentParserException.class,
                     () -> from(args));
         }
     }
@@ -234,7 +235,7 @@ class CommandLineArgumentsTest {
     class ExportSheetTest {
         @ParameterizedTest
         @ValueSource(strings = {"-E,characters/Sorcerer.pcg", "--exportsheet,characters/Sorcerer.pcg"})
-        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
+        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) throws ArgumentParserException {
             CommandLineArguments classUnderTest = from(args);
 
             Assertions.assertEquals(Optional.empty(), classUnderTest.getCampaignMode());
@@ -253,7 +254,7 @@ class CommandLineArgumentsTest {
         @ValueSource(strings = {"-E,file/that/doesn't/exist", "-E,", "-E", "-E,characters/Sorcerer.pcg,characters/Everything.pcg",
                 "--exportsheet,file/that/doesn't/exist", "--exportsheet,", "--exportsheet", "--exportsheet,characters/Sorcerer.pcg,characters/Everything.pcg"})
         void testillegalUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
-            Assertions.assertThrows(SystemExitInterceptor.SystemExitCalledException.class,
+            Assertions.assertThrows(ArgumentParserException.class,
                     () -> from(args));
         }
     }
@@ -262,7 +263,7 @@ class CommandLineArgumentsTest {
     class PartyTest {
         @ParameterizedTest
         @ValueSource(strings = {"-p,characters/Sorcerer.pcg", "--party,characters/Sorcerer.pcg"})
-        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
+        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) throws ArgumentParserException {
             CommandLineArguments classUnderTest = from(args);
 
             Assertions.assertEquals(Optional.empty(), classUnderTest.getCampaignMode());
@@ -281,7 +282,7 @@ class CommandLineArgumentsTest {
         @ValueSource(strings = {"-c,file/that/doesn't/exist", "-c,", "-c", "-c,characters/Sorcerer.pcg,characters/Everything.pcg",
                 "--character,file/that/doesn't/exist", "--character,", "--character", "--character,characters/Sorcerer.pcg,characters/Everything.pcg"})
         void invalidUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
-            Assertions.assertThrows(SystemExitInterceptor.SystemExitCalledException.class,
+            Assertions.assertThrows(ArgumentParserException.class,
                     () -> from(args));
         }
     }
@@ -290,7 +291,7 @@ class CommandLineArgumentsTest {
     class OutputFileTest {
         @ParameterizedTest
         @ValueSource(strings = {"-o,characters/nonexisting-file", "--outputfile,characters/nonexisting-file"})
-        void validNonexistingUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
+        void validNonexistingUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) throws ArgumentParserException {
             CommandLineArguments classUnderTest = from(args);
 
             Assertions.assertEquals(Optional.empty(), classUnderTest.getCampaignMode());
@@ -307,7 +308,7 @@ class CommandLineArgumentsTest {
 
         @ParameterizedTest
         @ValueSource(strings = {"-o,characters/Sorcerer.pcg", "--outputfile,characters/Sorcerer.pcg"})
-        void validExistingUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
+        void validExistingUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) throws ArgumentParserException {
             CommandLineArguments classUnderTest = from(args);
 
             Assertions.assertEquals(Optional.empty(), classUnderTest.getCampaignMode());
@@ -326,7 +327,7 @@ class CommandLineArgumentsTest {
         @ValueSource(strings = {"-o,", "-o", "-o,more/than,one/file",
                 "--outputfile,", "--outputfile", "--outputfile,more/than,one/file"})
         void invalidUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
-            Assertions.assertThrows(SystemExitInterceptor.SystemExitCalledException.class,
+            Assertions.assertThrows(ArgumentParserException.class,
                     () -> from(args));
         }
     }
@@ -335,7 +336,7 @@ class CommandLineArgumentsTest {
     class NameGeneratorTest {
         @ParameterizedTest
         @ValueSource(strings = {"--name-generator"})
-        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) {
+        void validUsage(@ConvertWith(CSVtoArrayConverter.class) String... args) throws ArgumentParserException {
             CommandLineArguments classUnderTest = from(args);
 
             Assertions.assertEquals(Optional.empty(), classUnderTest.getCampaignMode());
