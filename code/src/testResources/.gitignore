@@ -1,0 +1,3 @@
+# Don't keep any of the properties files created under testResources/
+# They're only used to check for missing/unused keys.
+*.properties
