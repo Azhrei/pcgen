@@ -301,7 +301,9 @@ public final class Main
 			try
 			{
 				Logging.log(Level.INFO, "Making directory " + savepath_dir);
-				savepath_dir.mkdir();
+				if (!savepath_dir.mkdir()) {
+					throw new IOException("Unable to create directory " + savepath_dir);
+				}
 			}
 			catch (Exception e)
 			{
