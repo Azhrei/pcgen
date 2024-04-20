@@ -70,6 +70,19 @@ public final class Main
 	private static PropertyContextFactory configFactory;
 	private static CommandLineArguments commandLineArguments;
 
+	static {
+		// FJE: I'm not thrilled with this approach, but not much choice
+		// right now.  (I'd prefer that the methods in this class were not
+		// `static` so that this member could be initialized in the
+		// constructor, but that's a huge change.)  In the meantime,
+		// `loadProperties()` can be invoked without `main()` being called,
+		// which leads to an NPE when accessing `commandLineArguments`.
+		try {
+			commandLineArguments = parseCommands(new String[] {""});
+		} catch (ArgumentParserException e) {
+			throw new RuntimeException(e);
+		}
+	}
 	private Main()
 	{
 	}
