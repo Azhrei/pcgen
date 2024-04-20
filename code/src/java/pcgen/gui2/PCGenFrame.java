@@ -36,6 +36,7 @@ import java.util.Observer;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.LogRecord;
+import javax.annotation.Nullable;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
@@ -354,7 +355,9 @@ public final class PCGenFrame extends JFrame implements UIDelegate, CharacterSel
 		 * This also handles the start in character sheet command option
 		 * @return boolean
 		 * @throws InterruptedException
+		 * Propagated from {{@link SwingUtilities#invokeAndWait(Runnable)}}
 		 * @throws InvocationTargetException
+		 * Propagated from {{@link SwingUtilities#invokeAndWait(Runnable)}}
 		 */
 		private boolean maybeLoadOrCreateCharacter() throws InterruptedException, InvocationTargetException
 		{
@@ -415,7 +418,7 @@ public final class PCGenFrame extends JFrame implements UIDelegate, CharacterSel
 	}
 
 	@Override
-	public void setCharacter(CharacterFacade character)
+	public void setCharacter(@Nullable CharacterFacade character)
 	{
 		if (currentCharacterRef.get() != null)
 		{
@@ -568,7 +571,7 @@ public final class PCGenFrame extends JFrame implements UIDelegate, CharacterSel
 
 	/**
 	 * Wraps the CharacterManager with GUI progress updates
-	 * @param character
+	 * @param character character to save
 	 * @return value from CharacterManager.saveCharacter()
 	 */
 	public boolean reallySaveCharacter(CharacterFacade character)
@@ -984,10 +987,10 @@ public final class PCGenFrame extends JFrame implements UIDelegate, CharacterSel
 		GuiAssertions.assertIsSwingThread();
 		DataSetFacade data = getLoadedDataSetRef().get();
 		CharacterFacade character = CharacterManager.createNewCharacter(this, data);
-		//This is called before the we set it as the selected character so
+		//This is called before we set it as the selected character so
 		//the InfoTabbedPane can catch any character specific properties when
 		//it is first displayed
-		if (file != null)
+		if (file != null && character != null)
 		{
 			character.setFile(file);
 		}
