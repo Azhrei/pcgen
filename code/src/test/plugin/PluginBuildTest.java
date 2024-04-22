@@ -17,14 +17,11 @@
  */
 package plugin;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -640,10 +637,12 @@ class PluginBuildTest
 		);
 		Collection<String> jarSet;
 		String[] jars = jarFolder.list();
-		jarSet = Arrays.stream(jars)
+        assert jars != null;
+        jarSet = Arrays.stream(jars)
 		               .filter(jar -> jar.startsWith(jarPrefix))
-		               .map(String::toLowerCase)
+		               .map(s -> s.toLowerCase(Locale.ROOT))
 		               .collect(Collectors.toSet());
+        assertFalse(jarSet.isEmpty(), "Jar folder " + jarFolder.getAbsolutePath() + " is empty!");
 		for (String source : sources)
 		{
 			if ((source != null) && source.endsWith(".java"))
@@ -662,7 +661,7 @@ class PluginBuildTest
 				}
 
 				testString = jarPrefix + testString + ".jar";
-				testString = testString.toLowerCase();
+				testString = testString.toLowerCase(Locale.ROOT);
 				assertTrue(
 						jarSet.contains(testString),
 						"Jar for " + source
