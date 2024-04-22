@@ -530,8 +530,12 @@ class PluginBuildTest
 		sourceFolder = new File("code/src/java/plugin/lsttokens/gamemode/abilitycategory");
 		checkPluginJars(jarPrefix, sourceFolder, jarFolder);
 
-		jarPrefix = "PointBuyLstToken-";
-		sourceFolder = new File("code/src/java/plugin/lsttokens/pointbuy");
+		jarPrefix = "PointBuyMethodLstToken-";
+		sourceFolder = new File("code/src/java/plugin/lsttokens/pointbuy/method");
+		checkPluginJars(jarPrefix, sourceFolder, jarFolder);
+
+		jarPrefix = "PointBuyStatLstToken-";
+		sourceFolder = new File("code/src/java/plugin/lsttokens/pointbuy/stat");
 		checkPluginJars(jarPrefix, sourceFolder, jarFolder);
 
 		jarPrefix = "RuleCheckLstToken-";
@@ -542,10 +546,6 @@ class PluginBuildTest
 		sourceFolder = new File("code/src/java/plugin/lsttokens/sizeadjustment");
 		checkPluginJars(jarPrefix, sourceFolder, jarFolder);
 
-		jarPrefix = "StatsAndChecksLstToken-";
-		sourceFolder = new File("code/src/java/plugin/lsttokens/statsandchecks");
-		checkPluginJars(jarPrefix, sourceFolder, jarFolder);
-
 		jarPrefix = "StatsAndChecks-AlignmentLstToken-";
 		sourceFolder = new File("code/src/java/plugin/lsttokens/statsandchecks/alignment");
 		checkPluginJars(jarPrefix, sourceFolder, jarFolder);
@@ -554,9 +554,9 @@ class PluginBuildTest
 		sourceFolder = new File("code/src/java/plugin/lsttokens/statsandchecks/bonusspell");
 		checkPluginJars(jarPrefix, sourceFolder, jarFolder);
 
-//		jarPrefix = "StatsAndChecks-CheckLstToken-";
-//		sourceFolder = new File("code/src/java/plugin/lsttokens/statsandchecks/check");
-//		checkPluginJars(jarPrefix, sourceFolder, jarFolder);
+		jarPrefix = "StatsAndChecks-StatLstToken-";
+		sourceFolder = new File("code/src/java/plugin/lsttokens/statsandchecks/stat");
+		checkPluginJars(jarPrefix, sourceFolder, jarFolder);
 
 		jarPrefix = "StatsAndChecks-StatLstToken-";
 		sourceFolder = new File("code/src/java/plugin/lsttokens/statsandchecks/stat");
