@@ -75,10 +75,11 @@ public final class Main
 		// right now.  (I'd prefer that the methods in this class were not
 		// `static` so that this member could be initialized in the
 		// constructor, but that's a huge change.)  In the meantime,
-		// `loadProperties()` can be invoked without `main()` being called,
-		// which leads to an NPE when accessing `commandLineArguments`.
+		// `loadProperties()` could be invoked without `main()` being called,
+		// which leads to an NPE when accessing `commandLineArguments`
+		// unless we initialize it here.
 		try {
-			commandLineArguments = parseCommands(new String[] {""});
+			commandLineArguments = parseCommands(new String[0]);
 		} catch (ArgumentParserException e) {
 			throw new RuntimeException(e);
 		}
